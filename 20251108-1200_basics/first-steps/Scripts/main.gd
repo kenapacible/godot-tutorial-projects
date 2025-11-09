@@ -25,13 +25,19 @@ func _process(deltaSeconds: float) -> void:
 	if screenHeight == 0 or screenWidth == 0:
 		return
 
-	# If the sprite reaches the right or left edge of the screen, reverse its horizontal direction
+	# If the sprite reaches the right or left edge of the screen
 	if $Sprite2D.position.x > screenWidth or $Sprite2D.position.x < 0:
+		# Reverse its horizontal direction
 		spriteSpeedX = -spriteSpeedX
+		# Change the sprite's color to a random color
+		$Sprite2D.modulate = Color(randf(), randf(), randf())
 
-	# If the sprite reaches the top or bottom edge of the screen, reverse its vertical direction
+	# If the sprite reaches the top or bottom edge of the screen
 	if $Sprite2D.position.y > screenHeight or $Sprite2D.position.y < 0:
+		# Reverse its vertical direction
 		spriteSpeedY = -spriteSpeedY
+		# Change the sprite's color to a random color
+		$Sprite2D.modulate = Color(randf(), randf(), randf())
 
 	# Update the sprite's position based on its speed and the elapsed time
 	$Sprite2D.position.x += spriteSpeedX * deltaSeconds;
