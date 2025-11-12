@@ -1,7 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://1vm17o6m07np"]
+[gd_scene load_steps=5 format=3 uid="uid://1vm17o6m07np"]
 
 [ext_resource type="Texture2D" uid="uid://doghmovcgeltw" path="res://graphics/map.png" id="1_o5qli"]
 [ext_resource type="PackedScene" uid="uid://dghd7rii024ea" path="res://scenes/player.tscn" id="2_0wfyh"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0wfyh"]
+size = Vector2(384, 0.25)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sugp2"]
+size = Vector2(1, 640)
 
 [node name="Game" type="Node2D"]
 
@@ -9,13 +15,40 @@
 texture = ExtResource("1_o5qli")
 centered = false
 
+[node name="Bounds" type="Node2D" parent="Map"]
+
+[node name="Top" type="StaticBody2D" parent="Map/Bounds"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Map/Bounds/Top"]
+position = Vector2(192, -0.125)
+shape = SubResource("RectangleShape2D_0wfyh")
+
+[node name="Bottom" type="StaticBody2D" parent="Map/Bounds"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Map/Bounds/Bottom"]
+position = Vector2(192, 640.125)
+shape = SubResource("RectangleShape2D_0wfyh")
+
+[node name="Left" type="StaticBody2D" parent="Map/Bounds"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Map/Bounds/Left"]
+position = Vector2(-0.5, 320)
+shape = SubResource("RectangleShape2D_sugp2")
+
+[node name="Right" type="StaticBody2D" parent="Map/Bounds"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Map/Bounds/Right"]
+position = Vector2(384.5, 322)
+shape = SubResource("RectangleShape2D_sugp2")
+
 [node name="Player" parent="." instance=ExtResource("2_0wfyh")]
+position = Vector2(20, 20)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 zoom = Vector2(2, 2)
 limit_left = 0
 limit_top = 0
-limit_right = 348
+limit_right = 384
 limit_bottom = 640
 position_smoothing_enabled = true
 position_smoothing_speed = 20.0
