@@ -2,6 +2,12 @@ class_name Car
 
 extends CharacterBody2D
 
+enum AccelerationState {
+	ACCELERATING,
+	DECELERATING,
+	NONE,
+}
+
 enum CarVariant {
 	UNSET = -1,
 	GREEN,
@@ -15,8 +21,12 @@ const VARIANT_TEXTURES: Dictionary = {
 	CarVariant.YELLOW: "res://graphics/cars/yellow.png",
 }
 
+var acceleration_rate: float = 150.0
+var acceleration_state: AccelerationState = AccelerationState.NONE
+var deceleration_rate: float = 200.0
 var direction: Vector2 = Vector2.ZERO
-var speed_current: float = 100.0
+var speed_current: float = 0
+var speed_max: float = 100.0
 var variant: CarVariant:
 	get:
 		return variant
@@ -27,7 +37,10 @@ var variant: CarVariant:
 				VARIANT_TEXTURES.get(value, "res://graphics/cars/red.png")
 			)
 
+@onready var go_area: ShapeCast2D = $GoArea
 @onready var sprite_renderer: Sprite2D = $Sprite2D
+@onready var stop_area: ShapeCast2D = $StopArea
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -43,6 +56,21 @@ func _process(_delta: float) -> void:
 
 
 # Called once on each physics tick
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
+	# If accelerating and an obstacle is detected in the stop area, start decelerating
+	if acceleration_state == AccelerationState.ACCELERATING and stop_area.is_colliding() == true:
+		acceleration_state = AccelerationState.DECELERATING
+	# If stopped, and no obstacle is detected in the go area, start accelerating
+	elif acceleration_state == AccelerationState.NONE and go_area.is_colliding() == false:
+		acceleration_state = AccelerationState.ACCELERATING
+
+	# If there's an ongoing acceleration transition
+	if acceleration_state == AccelerationState.ACCELERATING:
+		speed_current = move_toward(speed_current, speed_max, acceleration_rate * delta)
+	elif acceleration_state == AccelerationState.DECELERATING:
+		speed_current = move_toward(speed_current, 0, deceleration_rate * delta)
+		if speed_current == 0:
+			acceleration_state = AccelerationState.NONE
+
 	velocity = direction * speed_current
 	move_and_slide()

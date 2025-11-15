@@ -1,9 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://c3mdcioslrm4p"]
+[gd_scene load_steps=6 format=3 uid="uid://c3mdcioslrm4p"]
 
 [ext_resource type="Script" uid="uid://cby81lcmmfx65" path="res://scripts/car.gd" id="1_qt2eu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c35m8"]
 size = Vector2(22, 13)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qt2eu"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_50v30"]
 
 [node name="Car" type="CharacterBody2D"]
 collision_layer = 4
@@ -15,3 +19,15 @@ script = ExtResource("1_qt2eu")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 3.5)
 shape = SubResource("RectangleShape2D_c35m8")
+
+[node name="StopArea" type="ShapeCast2D" parent="."]
+position = Vector2(-11, 1)
+shape = SubResource("RectangleShape2D_qt2eu")
+target_position = Vector2(-20, 0)
+collision_mask = 6
+
+[node name="GoArea" type="ShapeCast2D" parent="."]
+position = Vector2(-11, 1)
+shape = SubResource("RectangleShape2D_50v30")
+target_position = Vector2(-10, 0)
+collision_mask = 6
