@@ -49,10 +49,12 @@ shape = SubResource("RectangleShape2D_sugp2")
 position = Vector2(384.5, 322)
 shape = SubResource("RectangleShape2D_sugp2")
 
-[node name="Player" parent="." instance=ExtResource("2_0wfyh")]
+[node name="Objects" type="Node2D" parent="."]
+
+[node name="Player" parent="Objects" instance=ExtResource("2_0wfyh")]
 position = Vector2(20, 20)
 
-[node name="Camera2D" type="Camera2D" parent="Player"]
+[node name="Camera2D" type="Camera2D" parent="Objects/Player"]
 zoom = Vector2(2, 2)
 limit_left = 0
 limit_top = 0
@@ -63,8 +65,9 @@ position_smoothing_speed = 20.0
 drag_horizontal_enabled = true
 drag_vertical_enabled = true
 
-[node name="CarSpawnerManager" type="Node2D" parent="."]
+[node name="CarSpawnerManager" type="Node2D" parent="." node_paths=PackedStringArray("spawn_parent")]
 script = ExtResource("3_jyhfs")
+spawn_parent = NodePath("../Objects")
 
 [node name="Timer" type="Timer" parent="CarSpawnerManager"]
 wait_time = 3.0
