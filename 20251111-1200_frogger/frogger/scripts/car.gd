@@ -8,7 +8,7 @@ enum AccelerationState {
 	NONE,
 }
 
-enum CarVariant {
+enum Variant {
 	UNSET = -1,
 	GREEN,
 	RED,
@@ -16,9 +16,9 @@ enum CarVariant {
 }
 
 const VARIANT_TEXTURES: Dictionary = {
-	CarVariant.GREEN: "res://graphics/cars/green.png",
-	CarVariant.RED: "res://graphics/cars/red.png",
-	CarVariant.YELLOW: "res://graphics/cars/yellow.png",
+	Variant.GREEN: "res://graphics/cars/green.png",
+	Variant.RED: "res://graphics/cars/red.png",
+	Variant.YELLOW: "res://graphics/cars/yellow.png",
 }
 
 var acceleration_rate: float = 150.0
@@ -27,12 +27,12 @@ var deceleration_rate: float = 200.0
 var direction: Vector2 = Vector2.ZERO
 var speed_current: float = 0
 var speed_max: float = 100.0
-var variant: CarVariant:
+var variant: Variant:
 	get:
 		return variant
 	set(value):
 		variant = value
-		if sprite_renderer and value != CarVariant.UNSET:
+		if sprite_renderer and value != Variant.UNSET:
 			sprite_renderer.texture = load(
 				VARIANT_TEXTURES.get(value, "res://graphics/cars/red.png")
 			)
@@ -44,7 +44,7 @@ var variant: CarVariant:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	if variant != CarVariant.UNSET:
+	if variant != Variant.UNSET:
 		sprite_renderer.texture = load(
 			VARIANT_TEXTURES.get(variant, "res://graphics/cars/red.png")
 		)

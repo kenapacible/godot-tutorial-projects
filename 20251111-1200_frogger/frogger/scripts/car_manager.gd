@@ -26,9 +26,9 @@ func _on_timer_timeout() -> void:
 	new_car.position = spawn_marker.position
 	new_car.speed_current = new_car.speed_max
 	new_car.variant = [
-		Car.CarVariant.GREEN,
-		Car.CarVariant.RED,
-		Car.CarVariant.YELLOW,
+		Car.Variant.GREEN,
+		Car.Variant.RED,
+		Car.Variant.YELLOW,
 	].pick_random()
 	spawn_parent.add_child(new_car)
 
