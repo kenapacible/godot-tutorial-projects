@@ -70,6 +70,7 @@ script = ExtResource("3_jyhfs")
 spawn_parent = NodePath("../Objects")
 
 [node name="SpawnTimer" type="Timer" parent="CarManager"]
+wait_time = 0.75
 autostart = true
 
 [node name="CarSpawners" type="Node2D" parent="CarManager"]
@@ -79,6 +80,12 @@ position = Vector2(394, 205)
 
 [node name="CarSpawner2" parent="CarManager/CarSpawners" instance=ExtResource("3_sugp2")]
 position = Vector2(394, 270)
+
+[node name="CarSpawner3" parent="CarManager/CarSpawners" instance=ExtResource("3_sugp2")]
+position = Vector2(394, 295)
+
+[node name="CarSpawner4" parent="CarManager/CarSpawners" instance=ExtResource("3_sugp2")]
+position = Vector2(394, 325)
 
 [node name="CarDespawners" type="Node2D" parent="CarManager"]
 
