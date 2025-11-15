@@ -1,6 +1,5 @@
-[gd_scene load_steps=4 format=3 uid="uid://c3mdcioslrm4p"]
+[gd_scene load_steps=3 format=3 uid="uid://c3mdcioslrm4p"]
 
-[ext_resource type="Texture2D" uid="uid://ocjfhrelwysu" path="res://graphics/cars/red.png" id="1_c35m8"]
 [ext_resource type="Script" uid="uid://cby81lcmmfx65" path="res://scripts/car.gd" id="1_qt2eu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c35m8"]
@@ -12,7 +11,6 @@ collision_mask = 6
 script = ExtResource("1_qt2eu")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_c35m8")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 3.5)

@@ -70,7 +70,6 @@ script = ExtResource("3_jyhfs")
 spawn_parent = NodePath("../Objects")
 
 [node name="SpawnTimer" type="Timer" parent="CarManager"]
-wait_time = 3.0
 autostart = true
 
 [node name="CarSpawners" type="Node2D" parent="CarManager"]
