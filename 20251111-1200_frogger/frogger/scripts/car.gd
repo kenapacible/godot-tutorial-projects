@@ -5,7 +5,6 @@ extends RigidBody2D
 enum AccelerationState {
 	ACCELERATING,
 	DECELERATING,
-	NONE,
 }
 
 enum Variant {
@@ -26,7 +25,7 @@ const VARIANT_TEXTURES: Dictionary = {
 	Variant.YELLOW: "res://graphics/cars/yellow.png",
 }
 
-var acceleration_state: AccelerationState = AccelerationState.NONE
+var acceleration_state: AccelerationState = AccelerationState.ACCELERATING
 var direction: Vector2 = Vector2.ZERO
 var variant: Variant:
 	get:
@@ -62,24 +61,20 @@ func _process(_delta: float) -> void:
 
 # Called once on each physics tick
 func _physics_process(_delta: float) -> void:
-	# If accelerating and an obstacle is detected in the stop area, start decelerating
-	if acceleration_state == AccelerationState.ACCELERATING and stop_area.is_colliding() == true:
-		acceleration_state = AccelerationState.DECELERATING
-	# If stopped, and no obstacle is detected in the go area, start accelerating
-	elif acceleration_state == AccelerationState.NONE and go_area.is_colliding() == false:
-		acceleration_state = AccelerationState.ACCELERATING
-	elif acceleration_state == AccelerationState.DECELERATING and linear_velocity.x >= -2.0:
-		acceleration_state = AccelerationState.NONE
-
-	# If there's an ongoing acceleration transition
 	match acceleration_state:
 		AccelerationState.ACCELERATING:
 			constant_force = direction * VELOCITY_MAX * BODY_MASS
 			linear_damp = LINEAR_DAMP_DEFAULT
+			# If an obstacle is detected in the stop area, start decelerating
+			if stop_area.is_colliding() == true:
+				acceleration_state = AccelerationState.DECELERATING
 		AccelerationState.DECELERATING:
 			constant_force = Vector2.ZERO
 			linear_damp = LINEAR_DAMP_BRAKE
-		AccelerationState.NONE:
-			constant_force = Vector2.ZERO
-			linear_damp = LINEAR_DAMP_DEFAULT
-			set_axis_velocity(Vector2.ZERO)
+			# If no obstacle is detected in the go area, start accelerating
+			if go_area.is_colliding() == false:
+				acceleration_state = AccelerationState.ACCELERATING
+			# If nearly stopped, fully stop
+			elif linear_velocity.x >= -2.0:
+				linear_damp = LINEAR_DAMP_DEFAULT
+				set_axis_velocity(Vector2.ZERO)
