@@ -21,15 +21,14 @@ func _on_timer_timeout() -> void:
 		return
 	var spawn_marker = car_spawners_container.get_children().pick_random() as Marker2D
 	var new_car = CAR_SCENE.instantiate() as Car
-	new_car.acceleration_state = Car.AccelerationState.ACCELERATING
 	new_car.direction = Vector2.LEFT
 	new_car.position = spawn_marker.position
-	new_car.speed_current = new_car.speed_max
 	new_car.variant = [
 		Car.Variant.GREEN,
 		Car.Variant.RED,
 		Car.Variant.YELLOW,
 	].pick_random()
+	new_car.set_axis_velocity(Vector2.LEFT * Car.VELOCITY_MAX)
 	spawn_parent.add_child(new_car)
 
 

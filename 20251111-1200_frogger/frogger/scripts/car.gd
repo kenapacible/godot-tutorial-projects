@@ -1,6 +1,6 @@
 class_name Car
 
-extends CharacterBody2D
+extends RigidBody2D
 
 enum AccelerationState {
 	ACCELERATING,
@@ -15,18 +15,19 @@ enum Variant {
 	YELLOW,
 }
 
+const BODY_MASS = 50.0
+const LINEAR_DAMP_DEFAULT = 1.0
+const LINEAR_DAMP_BRAKE = 5.0
+const VELOCITY_MAX = 100.0
+
 const VARIANT_TEXTURES: Dictionary = {
 	Variant.GREEN: "res://graphics/cars/green.png",
 	Variant.RED: "res://graphics/cars/red.png",
 	Variant.YELLOW: "res://graphics/cars/yellow.png",
 }
 
-var acceleration_rate: float = 150.0
 var acceleration_state: AccelerationState = AccelerationState.NONE
-var deceleration_rate: float = 200.0
 var direction: Vector2 = Vector2.ZERO
-var speed_current: float = 0
-var speed_max: float = 100.0
 var variant: Variant:
 	get:
 		return variant
@@ -44,6 +45,10 @@ var variant: Variant:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	gravity_scale = 0.0
+	linear_damp_mode = RigidBody2D.DAMP_MODE_REPLACE
+	lock_rotation = true
+	mass = BODY_MASS
 	if variant != Variant.UNSET:
 		sprite_renderer.texture = load(
 			VARIANT_TEXTURES.get(variant, "res://graphics/cars/red.png")
@@ -56,21 +61,25 @@ func _process(_delta: float) -> void:
 
 
 # Called once on each physics tick
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	# If accelerating and an obstacle is detected in the stop area, start decelerating
 	if acceleration_state == AccelerationState.ACCELERATING and stop_area.is_colliding() == true:
 		acceleration_state = AccelerationState.DECELERATING
 	# If stopped, and no obstacle is detected in the go area, start accelerating
 	elif acceleration_state == AccelerationState.NONE and go_area.is_colliding() == false:
 		acceleration_state = AccelerationState.ACCELERATING
+	elif acceleration_state == AccelerationState.DECELERATING and linear_velocity.x >= -2.0:
+		acceleration_state = AccelerationState.NONE
 
 	# If there's an ongoing acceleration transition
-	if acceleration_state == AccelerationState.ACCELERATING:
-		speed_current = move_toward(speed_current, speed_max, acceleration_rate * delta)
-	elif acceleration_state == AccelerationState.DECELERATING:
-		speed_current = move_toward(speed_current, 0, deceleration_rate * delta)
-		if speed_current == 0:
-			acceleration_state = AccelerationState.NONE
-
-	velocity = direction * speed_current
-	move_and_slide()
+	match acceleration_state:
+		AccelerationState.ACCELERATING:
+			constant_force = direction * VELOCITY_MAX * BODY_MASS
+			linear_damp = LINEAR_DAMP_DEFAULT
+		AccelerationState.DECELERATING:
+			constant_force = Vector2.ZERO
+			linear_damp = LINEAR_DAMP_BRAKE
+		AccelerationState.NONE:
+			constant_force = Vector2.ZERO
+			linear_damp = LINEAR_DAMP_DEFAULT
+			set_axis_velocity(Vector2.ZERO)
